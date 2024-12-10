@@ -13,3 +13,4 @@ Welcome to the SCANOSS Integration Documentation page!
 
    tools/gitlab.rst
    tools/gha.rst
+   tools/ado.rst
