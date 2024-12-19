@@ -56,18 +56,6 @@ Action Input Parameters
      - Scan output file name
      - Optional
      - ``results.json``
-   * - sbom.enabled
-     - Enable or disable scanning based on the SBOM file
-     - Optional
-     - ``true``
-   * - sbom.filepath
-     - Filepath of the SBOM file to be used for scanning
-     - Optional
-     - ``sbom.json``
-   * - sbom.type
-     - Type of SBOM operation: either 'identify' or 'ignore'
-     - Optional
-     - ``identify``
    * - dependencies.enabled
      - Option to enable or disable scanning of dependencies
      - Optional
@@ -116,7 +104,22 @@ Action Input Parameters
      - Runtime URL
      - Optional
      - ``ghcr.io/scanoss/scanoss-py:v1.15.0``
-
+   * - skipSnippets
+     - Skip the generation of snippets. (scanFiles option must be enabled)
+     - Optional
+     - ``false``
+   * - scanFiles
+     - Enable or disable file and snippet scanning
+     - Optional
+     - ``true``
+   * - scanossSettings
+     - Settings file to use for scanning. See the SCANOSS settings documentation
+     - Optional
+     - ``true``
+   * - settingsFilepath
+     - Filepath of the SCANOSS settings to be used for scanning
+     - Optional
+     - ``scanoss.json``
 
 Action Output Parameters
 ------------------------
@@ -143,8 +146,8 @@ The SCANOSS Code Scan Action includes two configurable policies:
 1. Copyleft: This policy checks if any component or code snippet is associated with a copyleft license. If such a
    license is detected, the pull request (PR) is rejected. The default list of Copyleft licenses is defined in the following `file <https://github.com/scanoss/gha-code-scan/blob/main/src/utils/license.utils.ts>`_.
 
-2. Undeclared: This policy compares the components detected in the repository against those declared in an sbom.json
-   file (customizable through the sbom.filepath parameter). If there are undeclared components, the PR is rejected.
+2. Undeclared: This policy compares the components detected in the repository against those declared in a scanoss.json
+   file (customizable through the settingsFilepath parameter). If there are undeclared components, the PR is rejected.
 
 In this scenario, a classic policy is executed that will fail if copyleft licenses are found within the results:
 
@@ -182,7 +185,7 @@ Full example
             id: scanoss-code-scan-step
             uses: scanoss/code-scan-action@v0
             with:
-              policies: copyleft, undeclared  #NOTE: undeclared policy requires a sbom.json in the project root
+              policies: copyleft, undeclared  
               dependencies.enabled: true
               # api-url: <YOUR_API_URL>
               # api-key: <YOUR_API_KEY>
